@@ -1,0 +1,78 @@
+void setup() {
+  // put your setup code here, to run once:
+timer.setInterval(3000L, securityState); // Дергаем функцию Статуса охраны раз в секунду
+
+}
+
+
+void loop() {
+
+     timer.run(); // Запускаем таймер
+  // put your main code here, to run repeatedly:
+
+}
+
+void securityState () // Определяем состояние Сигнализации и производим соответствущие действия
+{
+ 
+// Состояние 1 // "Если охрана Включена" и "Сработал датчик" и "Не в Состоянии 1"
+// Код выполнится один раз
+    if (flagProtection == true && rainState == true && securityStateX != 1) 
+  {   
+        
+      timer.setTimer(200, sendSetting, 4); // вызываем функкцию sendSetting 4 раза, с интервалом в 0,2 секунд
+   // timer.setTimer(200, sendSetting(securityStateX), 4); // вызываем функкцию sendSetting 4 раза, с интервалом в 0,2 секунд
+                 
+  }
+}
+
+
+void sendSetting() // Отправляем настройки, в зависимости от статуса Сигнализации (securityState)
+//void sendSetting(int securityStateY) 
+{
+  
+  String Notif; // Переменная для хранения сообщения
+  String color; // Переменная для хранения цвета
+  
+  // тут выбераем настройки в зависимости от состояния системы
+ switch (securityStateX) {
+ case 1:
+    Notif = "Дождь по цифровому сенсору";
+    color = BLYNK_RED;
+    break;
+ case 2:
+    Notif = "Под наблюдением по цифровому сенсору";
+    color = BLYNK_GREEN;
+    break;
+ case 3:
+    Notif = "Снято с наблюдения, после обнаружения дождя ц.с.";
+    color = BLYNK_BLUE;
+    break;
+ case 4:
+    Notif = "Снято с наблюдения по цифр.сенсору";
+    color = BLYNK_BLUE;
+    break; 
+    
+ //default:
+    // код для выполнения
+  }
+  Setting(color, Notif); // Настраиваем виджеты (меняем цвета выводим сообщение)  
+}
+
+
+// Настраиваем виджеты (меняем цвета выводим сообщение), в зависимости от статуса Сигнализации (securityState)
+void Setting (String color, String Text) 
+{
+ // переменная и конструкция из if else нужна для
+ // последовательной отправки с задержкой 
+ static int i = 1;
+  
+ if (i == 4) {led1.setColor(color); i=1;}                  // Меняем цвет LED V1
+
+ else if (i == 3) {Blynk.setProperty(V10, "color", color); i++;}// Меняем цвет виджета V10
+
+ else if (i == 2) {Blynk.setProperty(V2, "color", color);  i++;}// Меняем цвет виджета V2
+
+ else if (i == 1) {Blynk.virtualWrite(V10, Text); i++;}   // Выводим сообщение в Value Display
+  
+}
