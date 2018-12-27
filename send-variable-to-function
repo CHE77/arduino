@@ -19,7 +19,7 @@ void securityState () // Определяем состояние Сигнали�
 // Код выполнится один раз
     if (flagProtection == true && rainState == true && securityStateX != 1) 
   {   
-        
+        securityStateX = 1;
       timer.setTimer(200, sendSetting, 4); // вызываем функкцию sendSetting 4 раза, с интервалом в 0,2 секунд
    // timer.setTimer(200, sendSetting(securityStateX), 4); // вызываем функкцию sendSetting 4 раза, с интервалом в 0,2 секунд
                  
